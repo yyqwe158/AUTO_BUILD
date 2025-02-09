@@ -28,3 +28,23 @@ jobs:
           ls
           ls clang
           
+      - name: 设置环境变量
+        run: |
+          export PATH="$GITHUB_WORKSPACE/kernel_workspace/clang/bin:$PATH"
+          
+      - name: 克隆源码
+        run: |
+          git clone https://github.com/jhchong94/kernel_xiaomi_sm8250_n0kernel --depth=1 android_kernel
+          cd android_kernel
+          ls
+
+      - name: 克隆源码
+        run: |
+            make -j$(nproc --all) CC=clang O=out ARCH=arm64 CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-buildroot-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-androideabi- vendor/umi_defconfig
+            make -j8 CC=clang O=out ARCH=arm64 CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi-
+      
+      - name: 查看成果
+        run: |
+            ls out/arch/arm64/boot/Image
+            strings out/arch/arm64/boot/Image | grep "Linux version"
+          
