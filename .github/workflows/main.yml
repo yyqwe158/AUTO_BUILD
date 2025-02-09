@@ -41,19 +41,28 @@ jobs:
           cd $GITHUB_WORKSPACE/kernel_workspace
           git clone https://github.com/jhchong94/kernel_xiaomi_sm8250_n0kernel --depth=1 android_kernel
           git clone https://github.com/zzh20188/AUTO_BUILD.git src
-          # git clone https://gitlab.com/simonpunk/susfs4ksu.git --depth=1 susfs
+          git clone https://gitlab.com/simonpunk/susfs4ksu.git --depth=1 susfs
       - name: 安装KSUN
         run: |
           cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel
           curl -LSs "https://raw.githubusercontent.com/rifsxd/KernelSU-Next/next-susfs/kernel/setup.sh" | bash -s next-susfs
 
-      - name: 打补丁
+      - name: 集成KSU
         run: |
           cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel
           cp $GITHUB_WORKSPACE/kernel_workspace/src/patches/* .
           patch -p1 < new_defconfig.patch
           patch -p1 < non-kprobes.patch
           tail -n 10 arch/arm64/configs/vendor/umi_defconfig
+
+      - name: 应用susfs补丁
+        run: |
+          cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel
+          cp $GITHUB_WORKSPACE/kernel_workspace/susfs/kernel_patches/fs/* ./fs/
+          cp $GITHUB_WORKSPACE/kernel_workspace/susfs/kernel_patches/include/linux/* ./include/linux/
+          cp $GITHUB_WORKSPACE/kernel_workspace/susfs/kernel_patches/50_add_susfs_in_kernel-4.19.patch .
+          patch -p1 < 50_add_susfs_in_kernel-4.19.patch
+          patch -p1 < after_patch_fix.patch
         
       # - name: 开始构建
       #   run: |
