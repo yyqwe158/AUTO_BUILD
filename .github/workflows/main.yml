@@ -27,6 +27,8 @@ jobs:
         run: |
           mkdir -p $GITHUB_WORKSPACE/kernel_workspace
           cd $GITHUB_WORKSPACE/kernel_workspace
+          mkdir clang-aosp
+          git clone https://github.com/tomxi1997/Toolchain.git clang-aosp --depth=1
           wget https://github.com/ZyCromerZ/Clang/releases/download/19.0.0git-20240125-release/Clang-19.0.0git-20240125.tar.gz
           mkdir -p clang
           tar -xzvf Clang-19.0.0git-20240125.tar.gz -C clang
@@ -38,13 +40,15 @@ jobs:
           
       - name: 设置环境变量
         run: |
-          export PATH=$GITHUB_WORKSPACE/kernel_workspace/clang/bin:$PATH
+          export PATH=$GITHUB_WORKSPACE/kernel_workspace/clang/bin:$GITHUB_WORKSPACE/kernel_workspace/clang-aosp/google_gcc/aarch64-linux-android-4.9/bin:$GITHUB_WORKSPACE/kernel_workspace/clang-aosp/google_gcc/arm-linux-androideabi-4.9/bin:$PATH
+          echo $PATH
           ls $GITHUB_WORKSPACE/kernel_workspace/clang/bin
           
       - name: 克隆源码
         run: |
           git clone https://github.com/jhchong94/kernel_xiaomi_sm8250_n0kernel --depth=1 android_kernel
           cd android_kernel
+          ls $GITHUB_ACTION_PATH
           make -j$(nproc --all) CC=clang O=out ARCH=arm64 CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-buildroot-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-androideabi- vendor/umi_defconfig
           make -j8 CC=clang O=out ARCH=arm64 CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi-    
       # - name: 克隆源码
