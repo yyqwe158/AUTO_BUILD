@@ -49,6 +49,7 @@ jobs:
 
       - name: 集成KSU
         run: |
+          echo "进入源码目录"
           cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel
           cp $GITHUB_WORKSPACE/kernel_workspace/src/patches/* .
           patch -p1 < new_defconfig.patch
@@ -58,11 +59,16 @@ jobs:
       - name: 应用susfs补丁
         run: |
           cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel
+          echo "susfs文件夹1"
           cp $GITHUB_WORKSPACE/kernel_workspace/susfs/kernel_patches/fs/* ./fs/
+          echo "susfs文件夹2"
           cp $GITHUB_WORKSPACE/kernel_workspace/susfs/kernel_patches/include/linux/* ./include/linux/
+          echo "susfs补丁1"
           cp $GITHUB_WORKSPACE/kernel_workspace/susfs/kernel_patches/50_add_susfs_in_kernel-4.19.patch .
+          echo "执行susfs补丁"
           patch -p1 < 50_add_susfs_in_kernel-4.19.patch
-          patch -p1 < after_patch_fix.patch
+          # echo "修复"
+          # patch -p1 < after_patch_fix.patch
         
       # - name: 开始构建
       #   run: |
