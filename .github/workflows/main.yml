@@ -66,24 +66,24 @@ jobs:
           echo "susfs补丁1"
           cp $GITHUB_WORKSPACE/kernel_workspace/susfs/kernel_patches/50_add_susfs_in_kernel-4.19.patch .
           echo "执行susfs补丁"
-          patch -p1 < 50_add_susfs_in_kernel-4.19.patch
-          # echo "修复"
-          # patch -p1 < after_patch_fix.patch
+          patch -p1 < 50_add_susfs_in_kernel-4.19.patch || true
+          echo "修复"
+          patch -p1 < after_patch_fix.patch
         
-      # - name: 开始构建
-      #   run: |
-      #     export PATH=$GITHUB_WORKSPACE/kernel_workspace/clang/bin:$PATH
-      #     echo "Updated PATH: $PATH"
-      #     clang --version
+      - name: 开始构建
+        run: |
+          export PATH=$GITHUB_WORKSPACE/kernel_workspace/clang/bin:$PATH
+          echo "Updated PATH: $PATH"
+          clang --version
           
-      #     cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel
-      #     # ls $GITHUB_ACTION_PATH
-      #     make -j$(nproc --all) CC=clang O=out ARCH=arm64 CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-buildroot-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-androideabi- vendor/umi_defconfig
-      #     make -j8 CC=clang O=out ARCH=arm64 CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi-    
+          cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel
+          # ls $GITHUB_ACTION_PATH
+          make -j$(nproc --all) CC=clang O=out ARCH=arm64 CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-buildroot-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-androideabi- vendor/umi_defconfig
+          make -j8 CC=clang O=out ARCH=arm64 CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi-    
       
-      # - name: 查看成果
-      #   run: |
-      #       cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel
-      #       ls out/arch/arm64/boot/Image
-      #       strings out/arch/arm64/boot/Image | grep "Linux version"
+      - name: 查看成果
+        run: |
+            cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel
+            ls out/arch/arm64/boot/Image
+            strings out/arch/arm64/boot/Image | grep "Linux version"
           
