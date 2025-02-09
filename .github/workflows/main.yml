@@ -35,20 +35,40 @@ jobs:
           # sudo apt-get update
           # sudo apt install -y curl python2 llvm lld wget vim git ccache automake flex lzop bison gperf build-essential zip zlib1g-dev g++-multilib libxml2-utils bzip2 libbz2-dev libbz2-1.0 libghc-bzlib-dev squashfs-tools pngcrush schedtool dpkg-dev liblz4-tool make optipng maven libssl-dev pwgen libswitch-perl policycoreutils minicom libxml-sax-base-perl libxml-simple-perl bc libc6-dev-i386 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z-dev libgl1-mesa-dev xsltproc unzip device-tree-compiler kmod python3 python3-pip
           $GITHUB_WORKSPACE/kernel_workspace/clang/bin/clang --version
-          
-      - name: 克隆源码
+
+      - name: 克隆源码与补丁
         run: |
-          export PATH=$GITHUB_WORKSPACE/kernel_workspace/clang/bin:$PATH
-          echo "Updated PATH: $PATH"
-          clang --version
+          cd $GITHUB_WORKSPACE/kernel_workspace
           git clone https://github.com/jhchong94/kernel_xiaomi_sm8250_n0kernel --depth=1 android_kernel
-          cd android_kernel
-          # ls $GITHUB_ACTION_PATH
-          make -j$(nproc --all) CC=clang O=out ARCH=arm64 CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-buildroot-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-androideabi- vendor/umi_defconfig
-          make -j8 CC=clang O=out ARCH=arm64 CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi-    
-      
-      - name: 查看成果
+          git clone https://github.com/zzh20188/AUTO_BUILD.git src
+          # git clone https://gitlab.com/simonpunk/susfs4ksu.git --depth=1 susfs
+      - name: 安装KSUN
         run: |
-            ls out/arch/arm64/boot/Image
-            strings out/arch/arm64/boot/Image | grep "Linux version"
+          cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel
+          curl -LSs "https://raw.githubusercontent.com/rifsxd/KernelSU-Next/next-susfs/kernel/setup.sh" | bash -s next-susfs
+
+      - name: 打补丁
+        run: |
+          cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel
+          cp $GITHUB_WORKSPACE/kernel_workspace/src/patches/* .
+          patch -p1 < new_defconfig.patch
+          patch -p1 < non-kprobes.patch
+          tail -n 10 arch/arm64/configs/vendor/umi_defconfig
+        
+      # - name: 开始构建
+      #   run: |
+      #     export PATH=$GITHUB_WORKSPACE/kernel_workspace/clang/bin:$PATH
+      #     echo "Updated PATH: $PATH"
+      #     clang --version
+          
+      #     cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel
+      #     # ls $GITHUB_ACTION_PATH
+      #     make -j$(nproc --all) CC=clang O=out ARCH=arm64 CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-buildroot-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-androideabi- vendor/umi_defconfig
+      #     make -j8 CC=clang O=out ARCH=arm64 CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi-    
+      
+      # - name: 查看成果
+      #   run: |
+      #       cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel
+      #       ls out/arch/arm64/boot/Image
+      #       strings out/arch/arm64/boot/Image | grep "Linux version"
           
