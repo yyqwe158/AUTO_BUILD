@@ -29,7 +29,7 @@ jobs:
           cd $GITHUB_WORKSPACE/kernel_workspace
           mkdir clang-aosp
           git clone https://github.com/tomxi1997/Toolchain.git clang-aosp --depth=1
-          wget https://github.com/ZyCromerZ/Clang/releases/download/19.0.0git-20240125-release/Clang-19.0.0git-20240125.tar.gz
+          wget -q https://github.com/ZyCromerZ/Clang/releases/download/19.0.0git-20240125-release/Clang-19.0.0git-20240125.tar.gz
           mkdir -p clang
           tar -xzvf Clang-19.0.0git-20240125.tar.gz -C clang
           echo "$GITHUB_WORKSPACE/kernel_workspace/clang/bin:$GITHUB_WORKSPACE/kernel_workspace/clang-aosp/google_gcc/aarch64-linux-android-4.9/bin:$GITHUB_WORKSPACE/kernel_workspace/clang-aosp/google_gcc/arm-linux-androideabi-4.9/bin:$PATH" >> $GITHUB_ENV
