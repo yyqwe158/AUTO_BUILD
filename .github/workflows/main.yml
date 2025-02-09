@@ -23,35 +23,33 @@ jobs:
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
 
-      - name: 下载编译工具
-        run: |
-          mkdir -p $GITHUB_WORKSPACE/kernel_workspace
-          cd $GITHUB_WORKSPACE/kernel_workspace
-          wget https://github.com/ZyCromerZ/Clang/releases/download/19.0.0git-20240125-release/Clang-19.0.0git-20240125.tar.gz
-          mkdir -p clang
-          tar -xzvf Clang-19.0.0git-20240125.tar.gz -C clang
-          ls
-          ls clang
-          sudo apt-get update
-          sudo apt install -y curl python2 llvm lld wget vim git ccache automake flex lzop bison gperf build-essential zip zlib1g-dev g++-multilib libxml2-utils bzip2 libbz2-dev libbz2-1.0 libghc-bzlib-dev squashfs-tools pngcrush schedtool dpkg-dev liblz4-tool make optipng maven libssl-dev pwgen libswitch-perl policycoreutils minicom libxml-sax-base-perl libxml-simple-perl bc libc6-dev-i386 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z-dev libgl1-mesa-dev xsltproc unzip device-tree-compiler kmod python3 python3-pip
+      # - name: 下载编译工具
+      #   run: |
+      #     mkdir -p $GITHUB_WORKSPACE/kernel_workspace
+      #     cd $GITHUB_WORKSPACE/kernel_workspace
+      #     wget https://github.com/ZyCromerZ/Clang/releases/download/19.0.0git-20240125-release/Clang-19.0.0git-20240125.tar.gz
+      #     mkdir -p clang
+      #     tar -xzvf Clang-19.0.0git-20240125.tar.gz -C clang
+      #     ls
+      #     ls clang
+      #     sudo apt-get update
+      #     sudo apt install -y curl python2 llvm lld wget vim git ccache automake flex lzop bison gperf build-essential zip zlib1g-dev g++-multilib libxml2-utils bzip2 libbz2-dev libbz2-1.0 libghc-bzlib-dev squashfs-tools pngcrush schedtool dpkg-dev liblz4-tool make optipng maven libssl-dev pwgen libswitch-perl policycoreutils minicom libxml-sax-base-perl libxml-simple-perl bc libc6-dev-i386 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z-dev libgl1-mesa-dev xsltproc unzip device-tree-compiler kmod python3 python3-pip
         
           
-      - name: 设置环境变量
-        run: |
-          export PATH="$GITHUB_WORKSPACE/kernel_workspace/clang/bin:$PATH"
+      # - name: 设置环境变量
+      #   run: |
+      #     export PATH="$GITHUB_WORKSPACE/kernel_workspace/clang/bin:$PATH"
           
       - name: 克隆源码
         run: |
           git clone https://github.com/jhchong94/kernel_xiaomi_sm8250_n0kernel --depth=1 android_kernel
           cd android_kernel
-          ls
-          echo $GITHUB_ACTION_PATH
-      - name: 克隆源码
-        run: |
-            echo $GITHUB_ACTION_PATH
-            make -j$(nproc --all) CC=clang O=out ARCH=arm64 CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-buildroot-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-androideabi- vendor/umi_defconfig
-            make -j8 CC=clang O=out ARCH=arm64 CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi-
-      
+          make -j$(nproc --all) CC=clang O=out ARCH=arm64 CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-buildroot-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-androideabi- vendor/umi_defconfig
+          make -j8 CC=clang O=out ARCH=arm64 CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi-    
+      # - name: 克隆源码
+      #   run: |
+      #       make -j$(nproc --all) CC=clang O=out ARCH=arm64 CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-buildroot-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-androideabi- vendor/umi_defconfig
+      #       make -j8 CC=clang O=out ARCH=arm64 CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi-
       - name: 查看成果
         run: |
             ls out/arch/arm64/boot/Image
