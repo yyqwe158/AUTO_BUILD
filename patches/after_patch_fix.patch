@@ -1,0 +1,56 @@
+diff --git a/drivers/staging/qca-wifi-host-cmn/qdf/linux/src/qdf_threads.c b/drivers/staging/qca-wifi-host-cmn/qdf/linux/src/qdf_threads.c
+index bf196521c..9bb9ec914 100644
+--- a/drivers/staging/qca-wifi-host-cmn/qdf/linux/src/qdf_threads.c
++++ b/drivers/staging/qca-wifi-host-cmn/qdf/linux/src/qdf_threads.c
+@@ -106,7 +106,7 @@ void qdf_busy_wait(uint32_t us_interval)
+ }
+ qdf_export_symbol(qdf_busy_wait);
+ 
+-qdf_export_symbol(qdf_set_wake_up_idle);
++// qdf_export_symbol(qdf_set_wake_up_idle);
+ 
+ void qdf_set_user_nice(qdf_thread_t *thread, long nice)
+ {
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 879011ed7..9fddff410 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1493,7 +1493,11 @@ struct task_struct {
+ #else
+ 	ANDROID_KABI_RESERVE(7);
+ #endif
++#ifdef CONFIG_KSU_SUSFS
++	ANDROID_KABI_USE(8, u64 susfs_last_fake_mnt_id);
++#else
+ 	ANDROID_KABI_RESERVE(8);
++#endif
+ 
+ #ifdef CONFIG_ANDROID_SIMPLE_LMK
+ 	struct task_struct		*simple_lmk_next;
+@@ -1502,6 +1506,12 @@ struct task_struct {
+ 	 * New fields for task_struct should be added above here, so that
+ 	 * they are included in the randomized portion of task_struct.
+ 	 */
++#if defined(CONFIG_KSU_SUSFS) && !defined(ANDROID_KABI_RESERVE)
++	u64 susfs_task_state;
++#endif
++#if defined(CONFIG_KSU_SUSFS) && !defined(ANDROID_KABI_RESERVE)
++	u64 susfs_last_fake_mnt_id;
++#endif
+ 	randomized_struct_fields_end
+ 
+ 	/* CPU-specific state of this task: */
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index de29b92d2..ff5c0e5d4 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -19,6 +19,9 @@
+ #include <linux/shmem_fs.h>
+ #include <linux/uaccess.h>
+ #include <linux/pkeys.h>
++#ifdef CONFIG_KSU_SUSFS_SUS_KSTAT
++#include <linux/susfs_def.h>
++#endif
+ 
+ #include <asm/elf.h>
+ #include <asm/tlb.h>
