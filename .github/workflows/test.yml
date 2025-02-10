@@ -18,7 +18,9 @@ jobs:
         uses: actions/checkout@v4
       - run: echo "💡 这个 ${{ github.repository }} 仓库已经被克隆到runner."
       - run: echo "🖥️ 该工作流现在已经准备好在runner上测试代码"
-      - name: 列出仓库文件
-        run: |
-          ls ${{ github.workspace }}
-      - run: echo "🍏 任务状态为 ${{ job.status }}."
+      
+      - name: 检出仓库脚本到运行器
+        uses: actions/checkout@v4  
+      - name: Run a script
+        run: ./hello.sh
+
