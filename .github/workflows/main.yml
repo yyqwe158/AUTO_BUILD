@@ -55,7 +55,9 @@ jobs:
           echo "进入源码目录"
           cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel
           cp $GITHUB_WORKSPACE/kernel_workspace/src/patches/* .
-          patch -p1 < new_defconfig.patch
+          patch -p1 < new_defconfig.patch || true
+          cat ./arch/arm64/configs/vendor/umi_defconfig.rej
+          exit
           patch -p1 < non-kprobes.patch
           # tail -n 10 arch/arm64/configs/vendor/umi_defconfig
 
