@@ -3,7 +3,7 @@ run-name: ${{ github.actor }} 正在测试 GitHub Actions 🚀
 on:
   workflow_dispatch:
 jobs:
-  test job:
+  test_job:
     runs-on: ubuntu-22.04
     env:
       CCACHE_COMPILERCHECK: "%compiler% -dumpmachine; %compiler% -dumpversion"
