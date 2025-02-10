@@ -49,8 +49,9 @@ jobs:
           cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel
           curl -LSs "https://raw.githubusercontent.com/rifsxd/KernelSU-Next/next-susfs/kernel/setup.sh" | bash -s next-susfs
 
-      - name: 4.集成KSU
-        uses: actions/checkout@v4  
+      - name: 4.0检出仓库补丁
+        uses: actions/checkout@v4
+      - name: 4.5集成KSU
         run: |
           echo "进入源码目录"
           cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel
