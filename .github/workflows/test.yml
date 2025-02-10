@@ -1,5 +1,5 @@
-name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+name: 工作流例子
+run-name: ${{ github.actor }} 正在测试 GitHub Actions 🚀
 on:
   workflow_dispatch:
 jobs:
