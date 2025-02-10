@@ -1,1 +1,24 @@
-
+name: GitHub Actions Demo
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on:
+  workflow_dispatch:
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-22.04
+    env:
+      CCACHE_COMPILERCHECK: "%compiler% -dumpmachine; %compiler% -dumpversion"
+      CCACHE_NOHASHDIR: "true"
+      CCACHE_HARDLINK: "true"
+      CI: "false"
+    steps:
+      - run: echo "🎉 该任务自动触发于 ${{ github.event_name }} 事件."
+      - run: echo "🐧 这个任务现在运行于系统 ${{ runner.os }} 的服务主机在Github!"
+      - run: echo "🔎 你现在的分支为 ${{ github.ref }} 和你的仓库是 ${{ github.repository }}."
+      - name: 检查仓库代码
+        uses: actions/checkout@v4
+      - run: echo "💡 这个 ${{ github.repository }} 仓库已经被克隆到runner."
+      - run: echo "🖥️ 该工作流现在已经准备好在runner上测试代码"
+      - name: 列出仓库文件
+        run: |
+          ls ${{ github.workspace }}
+      - run: echo "🍏 任务状态为 ${{ job.status }}."
