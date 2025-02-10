@@ -1,5 +1,5 @@
 name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+run-name: ${{ github.actor }} 正在编译 骁龙865 小米系列内核！🚀 🚀
 on:
   workflow_dispatch:
 jobs:
