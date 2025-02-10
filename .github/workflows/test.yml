@@ -62,12 +62,25 @@ jobs:
           fi
 
           if [ $MODEL = MI10PRO ]; then
-            echo "选择小米10配置的补丁"
+            echo "选择小米10pro配置的补丁"
             echo "defconfig=vendor/cmi_defconfig" >> $GITHUB_ENV
           fi
 
           echo "当前配置文件为"
           echo $defconfig
+
+          if [ ${{ inputs.susfs }} = true ]; then
+            echo "选择集成susfs"
+          else
+            echo "跳过集成susfs"
+          fi
+          
+          if [ ! -z ${{ inputs.version }} ]; then
+            echo "不为空"
+          else
+            echo "字符串为空"
+          fi
+          
       
       # - name: 查看成果
       #   run: |
