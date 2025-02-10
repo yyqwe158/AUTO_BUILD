@@ -80,8 +80,7 @@ jobs:
         
       - name: 6.开始构建
         run: |
-          echo "$GITHUB_WORKSPACE/kernel_workspace/clang/bin" >> "$GITHUB_PATH"
-          # export PATH=$GITHUB_WORKSPACE/kernel_workspace/clang/bin:$PATH
+          export PATH=$GITHUB_WORKSPACE/kernel_workspace/clang/bin:$PATH
           echo "Updated PATH: $PATH"
           clang --version
           
