@@ -67,7 +67,8 @@ jobs:
             echo "defconfig=vendor/cmi_defconfig" >> "$GITHUB_ENV"
           fi
 
-          echo "当前配置文件为"
+          echo "当前配置文件为 $defconfig"
+          echo "defconfig=cmi_defconfig" >> "$GITHUB_ENV"
           echo $defconfig
 
           if [ ${{ inputs.susfs }} = true ]; then
