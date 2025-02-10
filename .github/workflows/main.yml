@@ -53,8 +53,9 @@ jobs:
         uses: actions/checkout@v4
       - name: 4.5集成KSU
         run: |
+          ls
           echo "进入源码目录"
-          cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel
+          cd ./kernel_workspace/android_kernel
           cp ./patches/* .
           patch -p1 < new_defconfig.patch
           patch -p1 < non-kprobes.patch
