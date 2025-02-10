@@ -58,12 +58,13 @@ jobs:
         run: |    
           if [ $MODEL = Mi10 ]; then
             echo "选择小米10配置的补丁"
-            echo "defconfig=vendor/umi_defconfig" >> $GITHUB_ENV
+            echo "defconfig=vendor/umi_defconfig" >> "$GITHUB_ENV"
+            echo "action_state=yellow" >> "$GITHUB_ENV"
           fi
 
           if [ $MODEL = MI10PRO ]; then
             echo "选择小米10pro配置的补丁"
-            echo "defconfig=vendor/cmi_defconfig" >> $GITHUB_ENV
+            echo "defconfig=vendor/cmi_defconfig" >> "$GITHUB_ENV"
           fi
 
           echo "当前配置文件为"
