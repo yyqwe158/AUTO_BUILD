@@ -12,48 +12,50 @@ jobs:
       CI: "false"
     steps:
 
-      - name: 下载编译工具
+      - name: 1.下载编译工具
         run: |
           mkdir -p $GITHUB_WORKSPACE/kernel_workspace
           cd $GITHUB_WORKSPACE/kernel_workspace
           wget -q https://github.com/ZyCromerZ/Clang/releases/download/19.0.0git-20240125-release/Clang-19.0.0git-20240125.tar.gz
           mkdir -p clang
           tar -xzf Clang-19.0.0git-20240125.tar.gz -C clang
-      - name: 克隆源码与补丁
+
+      - name: 2.克隆源码与补丁
         run: |
           cd $GITHUB_WORKSPACE/kernel_workspace
           git clone https://github.com/jhchong94/kernel_xiaomi_sm8250_n0kernel --depth=1 android_kernel
-          git clone https://github.com/zzh20188/AUTO_BUILD.git src
+          # git clone https://github.com/zzh20188/AUTO_BUILD.git src
           git clone https://gitlab.com/simonpunk/susfs4ksu.git -b kernel-4.19 --depth=1 susfs
-      - name: 安装KSUN
+
+      - name: 3.安装KSUN
         run: |
           cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel
           curl -LSs "https://raw.githubusercontent.com/rifsxd/KernelSU-Next/next-susfs/kernel/setup.sh" | bash -s next-susfs
 
-      - name: 集成KSU
+      - name: 4.集成KSU
         run: |
           echo "进入源码目录"
           cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel
-          cp $GITHUB_WORKSPACE/kernel_workspace/src/patches/* .
+          cp ./patches/* .
           patch -p1 < new_defconfig.patch
           patch -p1 < non-kprobes.patch
           tail -n 10 arch/arm64/configs/vendor/umi_defconfig
 
-      - name: 应用susfs补丁
+      - name: 5.应用susfs补丁
         run: |
           cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel
-          echo "susfs文件夹1"
+          echo "复制susfs/kernel_patches/fs/* 的内容"
           cp $GITHUB_WORKSPACE/kernel_workspace/susfs/kernel_patches/fs/* ./fs/
-          echo "susfs文件夹2"
+          echo "复制susfs/kernel_patches/include/linux/* 的内容"
           cp $GITHUB_WORKSPACE/kernel_workspace/susfs/kernel_patches/include/linux/* ./include/linux/
-          echo "susfs补丁1"
+          echo "复制susfs内核源码补丁"
           cp $GITHUB_WORKSPACE/kernel_workspace/susfs/kernel_patches/50_add_susfs_in_kernel-4.19.patch .
           echo "执行susfs补丁"
           patch -p1 < 50_add_susfs_in_kernel-4.19.patch || true
           echo "修复"
           patch -p1 < after_patch_fix.patch
         
-      - name: 开始构建
+      - name: 6.开始构建
         run: |
           echo "$GITHUB_WORKSPACE/kernel_workspace/clang/bin" >> "$GITHUB_PATH"
           # export PATH=$GITHUB_WORKSPACE/kernel_workspace/clang/bin:$PATH
@@ -65,18 +67,16 @@ jobs:
           make -j$(nproc --all) CC=clang O=out ARCH=arm64 CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-buildroot-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-androideabi- vendor/umi_defconfig
           make -j8 CC=clang O=out ARCH=arm64 CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi-    
       
-      - name: 查看成果
+      - name: 7.查看成果
         run: |
             cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel/out/arch/arm64/boot
             ls
             strings Image | grep "Linux version"
             cp Image ./Anykernel/
-            cd ./Anykernel/
-            zip -r -9 ak3.zip .
 
-      - name: '上传刷入包'
+      - name: 8.上传刷入包
         uses: actions/upload-artifact@v4
         with:
           name: KSUN_SUS_Mi10.zip
-          path: ./Anykernel/ak3.zip
+          path: ./Anykernel/*
           retention-days: 2
