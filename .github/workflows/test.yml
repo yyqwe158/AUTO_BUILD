@@ -22,7 +22,7 @@ jobs:
       - name: 检出仓库脚本到运行器
         uses: actions/checkout@v4  
       - name: 授予 x 权限
-        run: chmod + x ./hello.sh
+        run: chmod +x ./hello.sh
       - name: 运行该脚本
         run: ./hello.sh
 
