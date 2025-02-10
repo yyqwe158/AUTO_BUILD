@@ -1,4 +1,4 @@
-name: GitHub Actions Demo
+name: 编译KSUN——SUS内核
 run-name: ${{ github.actor }} 正在编译 骁龙865 小米系列内核！🚀 🚀
 on:
   workflow_dispatch:
@@ -41,7 +41,7 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/kernel_workspace
           git clone https://github.com/jhchong94/kernel_xiaomi_sm8250_n0kernel --depth=1 android_kernel
-          # git clone https://github.com/zzh20188/AUTO_BUILD.git src
+          git clone https://github.com/zzh20188/AUTO_BUILD.git src
           git clone https://gitlab.com/simonpunk/susfs4ksu.git -b kernel-4.19 --depth=1 susfs
 
       - name: 3.安装KSUN
@@ -49,17 +49,15 @@ jobs:
           cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel
           curl -LSs "https://raw.githubusercontent.com/rifsxd/KernelSU-Next/next-susfs/kernel/setup.sh" | bash -s next-susfs
 
-      - name: 4.0检出仓库补丁
-        uses: actions/checkout@v4
-      - name: 4.5集成KSU
+      - name: 4.集成KSU
         run: |
           ls
           echo "进入源码目录"
-          cd ./kernel_workspace/android_kernel
-          cp ./patches/* .
+          cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel
+          cp $GITHUB_WORKSPACE/kernel_workspace/src/patches/* .
           patch -p1 < new_defconfig.patch
           patch -p1 < non-kprobes.patch
-          tail -n 10 arch/arm64/configs/vendor/umi_defconfig
+          # tail -n 10 arch/arm64/configs/vendor/umi_defconfig
 
       - name: 5.应用susfs补丁
         run: |
