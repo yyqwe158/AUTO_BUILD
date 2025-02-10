@@ -113,7 +113,7 @@ jobs:
             cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel/out/arch/arm64/boot
             ls
             strings Image | grep "Linux version"
-            cp Image ./Anykernel/
+            cp Image $GITHUB_WORKSPACE/Anykernel/
 
       - name: 8.上传刷入包
         uses: actions/upload-artifact@v4
