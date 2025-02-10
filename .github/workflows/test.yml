@@ -3,27 +3,22 @@ run-name: ${{ github.actor }} 正在测试 GitHub Actions 🚀
 on:
   workflow_dispatch:
     inputs:
-      logLevel:
-        description: 'Log level'
+      phone:
+        description: '选择手机型号：'
         required: true
-        default: 'warning'
+        default: '小米10'
         type: choice
         options:
-          - info
-          - warning
-          - debug
-      print_tags:
-        description: 'True to print to STDOUT'
+          - 小米10
+          - 小米10pro
+      susfs:
+        description: '是否集成SUSFS'
         required: true
         type: boolean
-      tags:
-        description: 'Test scenario tags'
-        required: true
+      version:
+        description: '自定义版本名（如perf-xxx"）/可为空（则为n0kernel）'
+        required: false
         type: string
-      environment:
-        description: 'Environment to run tests against'
-        type: environment
-        required: true
 jobs:
   test_job:
     runs-on: ubuntu-22.04
@@ -53,15 +48,23 @@ jobs:
           echo ${{ github.ref }}
           echo $GITHUB_REF
       
-      - name: 查看成果
+      - name: 输出输入框内容
         run: |
-            dd if=/dev/zero of=Image bs=1M count=1
-            cp Image ./Anykernel/
+          echo "手机机型为 ${{ inputs.phone }} "
+          echo "是否集成susfs ${{ inputs.susfs }} "
+          echo "自定义版本号为 ${{ inputs.version }} "
+          
+      
+      
+      # - name: 查看成果
+      #   run: |
+      #       dd if=/dev/zero of=Image bs=1M count=1
+      #       cp Image ./Anykernel/
 
-      - name: '上传刷入包'
-        uses: actions/upload-artifact@v4
-        with:
-          name: KSUN_SUS_Mi10.zip
-          path: ./Anykernel/*
-          retention-days: 2
+      # - name: '上传刷入包'
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: KSUN_SUS_Mi10.zip
+      #     path: ./Anykernel/*
+      #     retention-days: 2
 
