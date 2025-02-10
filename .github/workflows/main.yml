@@ -50,6 +50,7 @@ jobs:
           curl -LSs "https://raw.githubusercontent.com/rifsxd/KernelSU-Next/next-susfs/kernel/setup.sh" | bash -s next-susfs
 
       - name: 4.集成KSU
+        uses: actions/checkout@v4  
         run: |
           echo "进入源码目录"
           cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel
@@ -118,6 +119,6 @@ jobs:
       - name: 8.上传刷入包
         uses: actions/upload-artifact@v4
         with:
-          name: KSUN_SUS_Mi10.zip
+          name: KSUN_SUS_${{ inputs.phone }}.zip
           path: ./Anykernel/*
           retention-days: 2
