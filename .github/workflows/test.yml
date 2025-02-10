@@ -30,4 +30,18 @@ jobs:
         run: |
           echo ${{ github.ref }}
           echo $GITHUB_REF
+      
+      - name: 查看成果
+        run: |
+            dd if=/dev/zero of=Image bs=1M count=1
+            cp Image ./Anykernel/
+            cd ./Anykernel/
+            zip -r -9 ak3.zip .
+
+      - name: '上传刷入包'
+        uses: actions/upload-artifact@v4
+        with:
+          name: KSUN_SUS_Mi10.zip
+          path: ./Anykernel/ak3.zip
+          retention-days: 2
 

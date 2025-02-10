@@ -67,7 +67,16 @@ jobs:
       
       - name: 查看成果
         run: |
-            cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel
-            ls out/arch/arm64/boot/Image
-            strings out/arch/arm64/boot/Image | grep "Linux version"
-          
+            cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel/out/arch/arm64/boot
+            ls
+            strings Image | grep "Linux version"
+            cp Image ./Anykernel/
+            cd ./Anykernel/
+            zip -r -9 ak3.zip .
+
+      - name: '上传刷入包'
+        uses: actions/upload-artifact@v4
+        with:
+          name: KSUN_SUS_Mi10.zip
+          path: ./Anykernel/ak3.zip
+          retention-days: 2
