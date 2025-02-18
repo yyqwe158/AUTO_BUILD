@@ -88,7 +88,7 @@ jobs:
           # 自定义版本
           if [ ! -z ${{ inputs.version }} ]; then
             echo "不为空"
-            sed -i '$s|echo "\$res"|echo "${{ inputs.version }}"|' ./scripts/setlocalversion
+            sed -i '$s|echo "\$res"|echo "-${{ inputs.version }}"|' ./scripts/setlocalversion
           else
             echo "字符串为空"
           fi
