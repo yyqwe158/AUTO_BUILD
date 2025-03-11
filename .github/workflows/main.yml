@@ -11,6 +11,9 @@ on:
         options:
           - 小米10
           - 小米10pro
+          - 小米10Ultra
+          - 红米k30pro
+          - 红米k30sUltra
       susfs:
         description: '是否集成SUSFS'
         required: true
@@ -99,6 +102,15 @@ jobs:
           elif [ ${{ inputs.phone }} = '小米10pro' ]; then
             echo "选择小米10pro配置"
             DEFCONFIG=vendor/cmi_defconfig
+          elif [ ${{ inputs.phone }} = '红米k30pro' ]; then
+            echo "选择红米k30pro配置"
+            DEFCONFIG=vendor/lmi_defconfig
+          elif [ ${{ inputs.phone }} = '红米k30sUltra' ]; then
+            echo "选择红米k30sUltra配置"
+            DEFCONFIG=vendor/apollo_defconfig
+          elif [ ${{ inputs.phone }} = '小米10Ultra' ]; then
+            echo "选择小米10Ultra配置"
+            DEFCONFIG=vendor/cas_defconfig
           else
             echo "非法内容"
           fi
