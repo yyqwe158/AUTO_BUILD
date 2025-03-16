@@ -135,7 +135,7 @@ jobs:
           esac
 
           echo "当前配置为 $DEFCONFIG"
-
+          echo '修改defconfig'
           echo "CONFIG_KSU_SUSFS=y" >> ./arch/arm64/configs/$DEFCONFIG
           echo "CONFIG_KSU_SUSFS_HAS_MAGIC_MOUNT=y" >> ./arch/arm64/configs/$DEFCONFIG
           echo "CONFIG_KSU_SUSFS_SUS_PATH=y" >> ./arch/arm64/configs/$DEFCONFIG
