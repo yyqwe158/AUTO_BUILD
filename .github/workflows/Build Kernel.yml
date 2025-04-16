@@ -5,14 +5,14 @@ on:
       phone:
         description: '选择手机型号：'
         required: true
-        default: '小米10'
+        default: 'MI10'
         type: choice
         options:
-          - 小米10
-          - 小米10pro
-          - 小米10Ultra
-          - 红米k30pro
-          - 红米k30sUltra
+          - MI10
+          - MI10pro
+          - MI10Ultra
+          - Redmik30pro
+          - Redmik30sUltra
       susfs:
         description: '是否集成SUSFS'
         required: true
@@ -109,23 +109,23 @@ jobs:
           fi
 
           case "${{ inputs.phone }}" in
-              "小米10")
+              "MI10")
                   echo "选择小米10配置"
                   DEFCONFIG=vendor/umi_defconfig
                   ;;
-              "小米10pro")
+              "MI10pro")
                   echo "选择小米10pro配置"
                   DEFCONFIG=vendor/cmi_defconfig
                   ;;
-              "红米k30pro")
+              "Redmik30pro")
                   echo "选择红米k30pro配置"
                   DEFCONFIG=vendor/lmi_defconfig
                   ;;
-              "红米k30sUltra")
+              "Redmik30sUltra")
                   echo "选择红米k30sUltra配置"
                   DEFCONFIG=vendor/apollo_defconfig
                   ;;
-              "小米10Ultra")
+              "MI10Ultra")
                   echo "选择小米10Ultra配置"
                   DEFCONFIG=vendor/cas_defconfig
                   ;;
