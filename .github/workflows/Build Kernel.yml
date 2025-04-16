@@ -50,6 +50,7 @@ jobs:
           wget -q https://github.com/ZyCromerZ/Clang/releases/download/19.0.0git-20240125-release/Clang-19.0.0git-20240125.tar.gz
           mkdir -p clang
           tar -xzf Clang-19.0.0git-20240125.tar.gz -C clang
+          sudo apt-get install build-essential libncurses-dev bison flex
 
       - name: 2.克隆源码与补丁
         run: |
