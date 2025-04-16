@@ -1,22 +1,22 @@
-name: 编译KSUN——SUS内核
-run-name: ${{ github.actor }} 正在编译 骁龙865 小米系列内核！🚀 🚀
+name: Build SM8250 MI Kernel
 on:
   workflow_dispatch:
     inputs:
       phone:
         description: '选择手机型号：'
         required: true
-        default: '小米10'
+        default: 'MI10'
         type: choice
         options:
-          - 小米10
-          - 小米10pro
-          - 小米10Ultra
-          - 红米k30pro
-          - 红米k30sUltra
+          - MI10
+          - MI10pro
+          - MI10Ultra
+          - Redmik30pro
+          - Redmik30sUltra
       susfs:
         description: '是否集成SUSFS'
         required: true
+        default: true
         type: boolean
       version:
         description: '自定义版本名（如perf-xxx）/可为空（则为n0kernel）'
@@ -109,23 +109,23 @@ jobs:
           fi
 
           case "${{ inputs.phone }}" in
-              "小米10")
+              "MI10")
                   echo "选择小米10配置"
                   DEFCONFIG=vendor/umi_defconfig
                   ;;
-              "小米10pro")
+              "MI10pro")
                   echo "选择小米10pro配置"
                   DEFCONFIG=vendor/cmi_defconfig
                   ;;
-              "红米k30pro")
+              "Redmik30pro")
                   echo "选择红米k30pro配置"
                   DEFCONFIG=vendor/lmi_defconfig
                   ;;
-              "红米k30sUltra")
+              "Redmik30sUltra")
                   echo "选择红米k30sUltra配置"
                   DEFCONFIG=vendor/apollo_defconfig
                   ;;
-              "小米10Ultra")
+              "MI10Ultra")
                   echo "选择小米10Ultra配置"
                   DEFCONFIG=vendor/cas_defconfig
                   ;;
@@ -155,7 +155,7 @@ jobs:
           echo "CONFIG_KSU_SUSFS_SPOOF_CMDLINE_OR_BOOTCONFIG=y" >> ./arch/arm64/configs/$DEFCONFIG
           echo "CONFIG_KSU_SUSFS_OPEN_REDIRECT=y" >> ./arch/arm64/configs/$DEFCONFIG
 
-          sed -i 's/check_defconfig//' ./build.config.gki
+          sed -i '2s/check_defconfig//' ./build.config.gki
 
           make -j$(nproc --all) CC=clang O=out ARCH=arm64 CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-buildroot-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-androideabi- $DEFCONFIG
           make -j$(nproc --all) CC=clang O=out ARCH=arm64 CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi-    
@@ -170,6 +170,6 @@ jobs:
       - name: 8.上传刷入包
         uses: actions/upload-artifact@v4
         with:
-          name: KSUN_SUS_sm8250.zip
+          name: KernelSU_NEXT_SUSFS_${{ github.event.inputs.phone}}
           path: kernel_workspace/src/Anykernel/*
           retention-days: 3
