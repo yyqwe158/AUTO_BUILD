@@ -170,6 +170,6 @@ jobs:
       - name: 8.上传刷入包
         uses: actions/upload-artifact@v4
         with:
-          name: KSUN_SUS_sm8250.zip
+          name: KSUN_SUS_${{ github.event.inputs.phone}}_sm8250.zip
           path: kernel_workspace/src/Anykernel/*
           retention-days: 3
