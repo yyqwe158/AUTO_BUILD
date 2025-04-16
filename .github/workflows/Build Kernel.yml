@@ -1,5 +1,4 @@
-name: 编译KSUN——SUS内核
-run-name: ${{ github.actor }} 正在编译 骁龙865 小米系列内核！🚀 🚀
+name: Build SM8350 MI Kernel
 on:
   workflow_dispatch:
     inputs:
@@ -17,6 +16,7 @@ on:
       susfs:
         description: '是否集成SUSFS'
         required: true
+        default: true
         type: boolean
       version:
         description: '自定义版本名（如perf-xxx）/可为空（则为n0kernel）'
@@ -155,7 +155,7 @@ jobs:
           echo "CONFIG_KSU_SUSFS_SPOOF_CMDLINE_OR_BOOTCONFIG=y" >> ./arch/arm64/configs/$DEFCONFIG
           echo "CONFIG_KSU_SUSFS_OPEN_REDIRECT=y" >> ./arch/arm64/configs/$DEFCONFIG
 
-          sed -i 's/check_defconfig//' ./build.config.gki
+          sed -i '2s/check_defconfig//' ./build.config.gki
 
           make -j$(nproc --all) CC=clang O=out ARCH=arm64 CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-buildroot-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-androideabi- $DEFCONFIG
           make -j$(nproc --all) CC=clang O=out ARCH=arm64 CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi-    
