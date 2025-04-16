@@ -50,12 +50,11 @@ jobs:
           wget -q https://github.com/ZyCromerZ/Clang/releases/download/19.0.0git-20240125-release/Clang-19.0.0git-20240125.tar.gz
           mkdir -p clang
           tar -xzf Clang-19.0.0git-20240125.tar.gz -C clang
-          sudo apt-get install build-essential libncurses-dev bison flex
 
       - name: 2.克隆源码与补丁
         run: |
           cd $GITHUB_WORKSPACE/kernel_workspace
-          git clone https://github.com/jhchong94/kernel_xiaomi_sm8250_n0kernel --depth=1 android_kernel
+          git clone https://github.com/EmanuelCN/kernel_xiaomi_sm8250 --depth=1 android_kernel
           git clone https://github.com/zzh20188/AUTO_BUILD.git src
           git clone https://gitlab.com/simonpunk/susfs4ksu.git -b kernel-4.19 --depth=1 susfs
 
