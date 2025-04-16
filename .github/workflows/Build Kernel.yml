@@ -1,4 +1,4 @@
-name: Build SM8350 MI Kernel
+name: Build SM8250 MI Kernel
 on:
   workflow_dispatch:
     inputs:
