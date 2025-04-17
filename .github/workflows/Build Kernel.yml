@@ -9,10 +9,8 @@ on:
         type: choice
         options:
           - MI10
-          - MI10pro
-          - MI10Ultra
-          - Redmik30pro
-          - Redmik30sUltra
+          - MI10_Pro
+          - REDMI_K30s_Ultra
       susfs:
         description: '是否集成SUSFS'
         required: true
@@ -113,27 +111,19 @@ jobs:
                   echo "选择小米10配置"
                   DEFCONFIG=vendor/umi_defconfig
                   ;;
-              "MI10pro")
-                  echo "选择小米10pro配置"
+              "MI10_Pro")
+                  echo "选择小米10Pro配置"
                   DEFCONFIG=vendor/cmi_defconfig
                   ;;
-              "Redmik30pro")
-                  echo "选择红米k30pro配置"
-                  DEFCONFIG=vendor/lmi_defconfig
-                  ;;
-              "Redmik30sUltra")
-                  echo "选择红米k30sUltra配置"
+              "REDMI_K30s_Ultra")
+                  echo "选择红米K30s Ultra配置"
                   DEFCONFIG=vendor/apollo_defconfig
-                  ;;
-              "MI10Ultra")
-                  echo "选择小米10Ultra配置"
-                  DEFCONFIG=vendor/cas_defconfig
                   ;;
               *)
                   echo "非法内容"
                   ;;
           esac
-
+          
           echo "当前配置为 $DEFCONFIG"
           echo '修改defconfig'
           echo "CONFIG_MODULES=y" >> ./arch/arm64/configs/$DEFCONFIG
@@ -154,9 +144,7 @@ jobs:
           echo "CONFIG_KSU_SUSFS_HIDE_KSU_SUSFS_SYMBOLS=y" >> ./arch/arm64/configs/$DEFCONFIG
           echo "CONFIG_KSU_SUSFS_SPOOF_CMDLINE_OR_BOOTCONFIG=y" >> ./arch/arm64/configs/$DEFCONFIG
           echo "CONFIG_KSU_SUSFS_OPEN_REDIRECT=y" >> ./arch/arm64/configs/$DEFCONFIG
-
           sed -i '2s/check_defconfig//' ./build.config.gki
-
           make -j$(nproc --all) CC=clang O=out ARCH=arm64 CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-buildroot-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-androideabi- $DEFCONFIG
           make -j$(nproc --all) CC=clang O=out ARCH=arm64 CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi-    
       
