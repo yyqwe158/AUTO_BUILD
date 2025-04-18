@@ -9,10 +9,10 @@ on:
         type: choice
         options:
           - MI10
-          - MI10pro
-          - MI10Ultra
-          - Redmik30pro
-          - Redmik30sUltra
+          - MI10_Pro
+          - MI10_Ultra
+          - REDMI_K30_Pro
+          - REDMI_K30s_Ultra
       susfs:
         description: '是否集成SUSFS'
         required: true
@@ -113,19 +113,19 @@ jobs:
                   echo "选择小米10配置"
                   DEFCONFIG=vendor/umi_defconfig
                   ;;
-              "MI10pro")
+              "MI10_Pro")
                   echo "选择小米10pro配置"
                   DEFCONFIG=vendor/cmi_defconfig
                   ;;
-              "Redmik30pro")
+              "REDMI_K30_Pro")
                   echo "选择红米k30pro配置"
                   DEFCONFIG=vendor/lmi_defconfig
                   ;;
-              "Redmik30sUltra")
+              "REDMI_K30s_Ultra")
                   echo "选择红米k30sUltra配置"
                   DEFCONFIG=vendor/apollo_defconfig
                   ;;
-              "MI10Ultra")
+              "MI10_Ultra")
                   echo "选择小米10Ultra配置"
                   DEFCONFIG=vendor/cas_defconfig
                   ;;
