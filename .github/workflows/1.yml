@@ -1,4 +1,4 @@
-name: 编译KSUN——SUS内核
+name: 编译
 run-name: ${{ github.actor }} 正在🚀 🚀
 on:
   workflow_dispatch:
