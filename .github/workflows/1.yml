@@ -1,0 +1,102 @@
+name: 编译KSUN——SUS内核
+run-name: ${{ github.actor }} 正在编译 骁龙865 小米系列内核！🚀 🚀
+on:
+  workflow_dispatch:
+    inputs:
+      phone:
+        description: '选择手机型号：'
+        required: true
+        default: '小米10'
+        type: choice
+        options:
+          - 小米10
+          - 小米10pro
+      susfs:
+        description: '是否集成SUSFS'
+        required: true
+        type: boolean
+      version:
+        description: '自定义版本名（如perf-xxx）/可为空（则为n0kernel）'
+        required: false
+        type: string
+jobs:
+  build_job:
+    runs-on: ubuntu-22.04
+    env:
+      CCACHE_COMPILERCHECK: "%compiler% -dumpmachine; %compiler% -dumpversion"
+      CCACHE_NOHASHDIR: "true"
+      CCACHE_HARDLINK: "true"
+      CI: "false"
+    steps:
+
+      - name: 1.下载编译工具
+        run: |
+          mkdir -p $GITHUB_WORKSPACE/kernel_workspace
+          cd $GITHUB_WORKSPACE/kernel_workspace
+          wget -q https://github.com/ZyCromerZ/Clang/releases/download/19.0.0git-20240125-release/Clang-19.0.0git-20240125.tar.gz
+          mkdir -p clang
+          tar -xzf Clang-19.0.0git-20240125.tar.gz -C clang
+
+      - name: 2.克隆源码与补丁
+        run: |
+          cd $GITHUB_WORKSPACE/kernel_workspace
+          git clone https://github.com/jhchong94/kernel_xiaomi_sm8250_n0kernel --depth=1 android_kernel
+          #git clone https://github.com/zzh20188/AUTO_BUILD.git src
+          #git clone https://gitlab.com/simonpunk/susfs4ksu.git -b kernel-4.19 --depth=1 susfs
+
+      - name: 3.安装KSUN
+        run: |
+          pwd
+
+      - name: 4.集成KSU
+        run: |
+          ls
+          pwd
+
+      - name: 5.应用susfs补丁
+        run: |
+          pwd
+        
+      - name: 6.开始构建
+        run: |
+          export PATH=$GITHUB_WORKSPACE/kernel_workspace/clang/bin:$PATH
+          echo "Updated PATH: $PATH"
+          clang --version
+          
+          cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel
+          # 自定义版本
+          if [ ! -z ${{ inputs.version }} ]; then
+            echo "不为空"
+            sed -i '$s|echo "\$res"|echo "${{ inputs.version }}"|' ./scripts/setlocalversion
+          else
+            echo "字符串为空"
+          fi
+
+          if [ ${{ inputs.phone }} = '小米10' ]; then
+            echo "选择小米10配置"
+            DEFCONFIG=vendor/umi_defconfig
+          elif [ ${{ inputs.phone }} = '小米10pro' ]; then
+            echo "选择小米10pro配置"
+            DEFCONFIG=vendor/cmi_defconfig
+          else
+            echo "非法内容"
+          fi
+
+          echo "当前配置为 $DEFCONFIG"
+
+          make -j$(nproc --all) CC=clang O=out ARCH=arm64 CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-buildroot-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-androideabi- $DEFCONFIG
+          make -j8 CC=clang O=out ARCH=arm64 CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi-    
+      
+      - name: 7.查看成果
+        run: |
+            cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel/out/arch/arm64/boot
+            ls
+            strings Image | grep "Linux version"
+            cp Image $GITHUB_WORKSPACE/kernel_workspace/src/Anykernel/
+
+      - name: 8.上传刷入包
+        uses: actions/upload-artifact@v4
+        with:
+          name: KSUN_SUS_${{ inputs.phone }}.zip
+          path: kernel_workspace/src/Anykernel/*
+          retention-days: 2
