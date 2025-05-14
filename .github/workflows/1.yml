@@ -92,11 +92,11 @@ jobs:
             cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel/out/arch/arm64/boot
             ls
             strings Image | grep "Linux version"
-            cp Image $GITHUB_WORKSPACE/kernel_workspace/src/Anykernel/
+            #cp Image $GITHUB_WORKSPACE/kernel_workspace/src/Anykernel/
 
       - name: 8.上传刷入包
         uses: actions/upload-artifact@v4
         with:
-          name: KSUN_SUS_${{ inputs.phone }}.zip
-          path: kernel_workspace/src/Anykernel/*
+          name: Image
+          path: kernel_workspace/android_kernel/out/arch/arm64/boot/Image
           retention-days: 2
