@@ -41,7 +41,7 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/kernel_workspace
           git clone https://github.com/yyqwe158/kernel_xiaomi_sm8250_n0kernel --depth=1 android_kernel
-          #git clone https://github.com/zzh20188/AUTO_BUILD.git src
+          git clone https://github.com/zzh20188/AUTO_BUILD.git src
           #git clone https://gitlab.com/simonpunk/susfs4ksu.git -b kernel-4.19 --depth=1 susfs
 
       - name: 3.安装KSUN
@@ -92,13 +92,11 @@ jobs:
             cd $GITHUB_WORKSPACE/kernel_workspace/android_kernel/out/arch/arm64/boot
             ls
             strings Image | grep "Linux version"
-            mkdir -p $GITHUB_WORKSPACE/kernel_workspace/114514
-            cp Image $GITHUB_WORKSPACE/kernel_workspace/114514/
-            #cp Image $GITHUB_WORKSPACE/kernel_workspace/src/Anykernel/
+            cp Image $GITHUB_WORKSPACE/kernel_workspace/src/Anykernel/
 
       - name: 8.上传刷入包
         uses: actions/upload-artifact@v4
         with:
-          name: 1.zip
-          path: kernel_workspace/114514/*
+          name: KSUN_SUS_${{ inputs.phone }}.zip
+          path: kernel_workspace/src/Anykernel/*
           retention-days: 2
